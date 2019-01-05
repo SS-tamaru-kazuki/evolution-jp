@@ -34,9 +34,8 @@ define('MODX_API_MODE', true);
 $database_type = function_exists('mysqli_connect') ? 'mysqli' : 'mysql';
 
 // open db connection
-$setupPath = realpath(getcwd());
-$callBackFnc = include_once("{$setupPath}/setup.info.php");
-include_once("{$setupPath}/sqlParser.class.php");
+$callBackFnc = include_once(__DIR__ . '/setup.info.php');
+include_once(__DIR__ . '/sqlParser.class.php');
 $sqlParser = new SqlParser();
 $sqlParser->prefix     = $_SESSION['table_prefix'];
 $sqlParser->adminname  = $_SESSION['adminname'];

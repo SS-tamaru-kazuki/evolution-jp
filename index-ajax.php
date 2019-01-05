@@ -10,7 +10,7 @@ else force_exit();
 
 if(isset($_POST['ucfg'])&& strpos($_POST['ucfg'],'@EVAL')!==false) force_exit();
 
-$base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
+$base_path = str_replace('\\','/',__DIR__) . '/';
 $q = $base_path . $q;
 $q = str_replace('\\','/',$q);
 

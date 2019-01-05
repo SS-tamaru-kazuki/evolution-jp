@@ -29,7 +29,7 @@ class VeriWord {
 	var $font_path;
 
 	function __construct() {
-		$vword_base_path = str_replace('\\','/',dirname(__FILE__)) . '/';
+		$vword_base_path = str_replace('\\','/',__DIR__) . '/';
 		$this->font_path  = $vword_base_path.'ftb_____.ttf';
 		$this->bg_image   = $vword_base_path.'noise.jpg';
 	}

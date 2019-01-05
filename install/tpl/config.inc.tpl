@@ -18,4 +18,4 @@ $lastInstallTime             = [+lastInstallTime+];
 setlocale (LC_TIME, 'ja_JP.UTF-8');
 if(function_exists('date_default_timezone_set')) date_default_timezone_set('Asia/Tokyo');
 
-include_once(dirname(__FILE__) . '/initialize.inc.php');
+include_once(__DIR__ . '/initialize.inc.php');

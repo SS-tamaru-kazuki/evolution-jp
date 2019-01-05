@@ -1,7 +1,7 @@
 <?php
 if(function_exists('mysqli_connect')) $fname = 'mysqli';
 else                                  $fname = 'mysql';
-include_once(dirname(__FILE__)."/dbapi/{$fname}.inc.php");
+include_once(__DIR__."/dbapi/{$fname}.inc.php");
 global $modx;
 $modx = $this;
 $this->db= new DBAPI;

@@ -350,7 +350,7 @@ class DataGrid {
 			{
 				if(!$this->pager)
 				{
-					include_once dirname(__FILE__)."/datasetpager.class.php";
+					include_once __DIR__.'/datasetpager.class.php';
 					$this->pager = new DataSetPager($this->id,$this->ds,$this->pageSize,$this->pageNumber);
 					$this->pager->setRenderRowFnc($this); // pass this object
 					$this->pager->cssStyle = $pagerStyle;

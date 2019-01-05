@@ -23,9 +23,6 @@ require_once(MODX_CORE_PATH . 'version.inc.php');
 
 if (defined('IN_MANAGER_MODE')) $init->init_mgr();
 
-if (!defined('E_DEPRECATED'))      define('E_DEPRECATED',       8192);
-if (!defined('E_USER_DEPRECATED')) define('E_USER_DEPRECATED', 16384);
-
 error_reporting(E_ALL & ~E_NOTICE);
 
 if(!defined('MODX_API_MODE')) set_parser_mode();

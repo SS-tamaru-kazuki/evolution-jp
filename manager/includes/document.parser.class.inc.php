@@ -2730,20 +2730,35 @@ class DocumentParser {
 
     function getField($field='content', $docid='')
     {
-        if($docid==='' && isset($this->documentIdentifier))
+        static $doc = null;
+
+        if(isset($doc[$docid][$field]) && !is_array($doc[$docid][$field])) {
+            return $doc[$docid][$field];
+        }
+        
+        if($docid==='') {
+            if (!isset($this->documentIdentifier)) {
+                return false;
+            }
             $docid = $this->documentIdentifier;
+        }
         elseif(!preg_match('@^[0-9]+$@',$docid))
             $docid = $this->getIdFromAlias($docid);
         
-        if(!$docid) return false;
-        
-        $doc = $this->getDocumentObject('id', $docid);
-        
-        if(is_array($doc[$field]))
-        {
-            return $this->tvProcessor($doc[$field]);
+        if(!$docid) {
+            $doc[$docid][$field] = false;
+            return false;
         }
-        return $doc[$field];
+        
+        $docObj = $this->getDocumentObject('id', $docid);
+        
+        if(is_array($docObj[$field])) {
+            $doc[$docid][$field] = $this->tvProcessor($docObj[$field]);
+        } else {
+            $doc[$docid][$field] = $docObj[$field];
+        }
+
+        return $doc[$docid][$field];
     }
     
     function getPageInfo($docid= 0, $activeOnly= 1, $fields= 'id, pagetitle, description, alias')

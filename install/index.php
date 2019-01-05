@@ -12,8 +12,7 @@ if (!defined('E_USER_DEPRECATED')) define('E_USER_DEPRECATED', 16384);
 
 // do a little bit of environment cleanup if possible
 if (version_compare(phpversion(), "5.3") < 0) {
-    @ ini_set('magic_quotes_runtime', 0);
-    @ ini_set('magic_quotes_sybase', 0);
+    exit('MODX requires PHP 5.3.0 or later');
 }
 
 header("Content-Type: text/html; charset=utf-8");

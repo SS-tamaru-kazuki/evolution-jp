@@ -28,13 +28,6 @@ if(!$modx->db->isConnected()) {
 	$db_connection_method = trim($_POST['database_connection_method']);
 	$db_charset           = substr($db_collation,0,strpos($db_collation,'_'));
 	
-	if(get_magic_quotes_gpc()) {
-		$db_name              = stripslashes($db_name);
-		$table_prefix         = stripslashes($table_prefix);
-		$db_collation         = stripslashes($db_collation);
-		$db_connection_method = stripslashes($db_connection_method);
-		$db_charset           = stripslashes($db_charset);
-	}
 	$db_name              = $modx->db->escape($db_name);
 	$table_prefix         = $modx->db->escape($table_prefix);
 	$db_collation         = $modx->db->escape($db_collation);

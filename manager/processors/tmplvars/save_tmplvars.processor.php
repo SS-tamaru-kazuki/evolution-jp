@@ -34,8 +34,8 @@ switch ($_POST['mode']) {
     case '300':
         // invoke OnBeforeTVFormSave event
         $tmp = array(
-          'mode' => 'new',
-          'id'=>''
+            'mode' => 'new',
+            'id'=>''
         );
         $modx->invokeEvent('OnBeforeTVFormSave', $tmp);
         if (check_exist_name($name) !== false) {
@@ -88,8 +88,8 @@ switch ($_POST['mode']) {
     case '301':
         // invoke OnBeforeTVFormSave event
         $tmp = array(
-          'mode' => 'upd',
-          'id' => $id
+            'mode' => 'upd',
+            'id' => $id
         );
         $modx->invokeEvent('OnBeforeTVFormSave', $tmp);
         if (check_exist_name($name) !== false) {

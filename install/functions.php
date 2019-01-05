@@ -34,10 +34,10 @@ function includeLang($lang_name, $dir='langs/') {
     $_lang = array ();
     $lang_name = str_replace('\\','/',$lang_name);
     if(strpos($lang_name,'/')!==false) {
-         require_once('langs/english.inc.php');
+        require_once('langs/english.inc.php');
     }
     elseif(is_file("{$dir}{$lang_name}.inc.php")) {
-         require_once("{$dir}{$lang_name}.inc.php");
+        require_once("{$dir}{$lang_name}.inc.php");
     }
     else require_once("{$dir}english.inc.php");
 }
@@ -190,10 +190,10 @@ function clean_up($sqlParser) {
     // secure web documents - privateweb 
     $modx->db->query("UPDATE `{$table_prefix}site_content` SET privateweb = 0 WHERE privateweb = 1");
     $sql =  "SELECT DISTINCT sc.id 
-             FROM `{$table_prefix}site_content` sc
-             LEFT JOIN `{$table_prefix}document_groups` dg ON dg.document = sc.id
-             LEFT JOIN `{$table_prefix}webgroup_access` wga ON wga.documentgroup = dg.document_group
-             WHERE wga.id>0";
+            FROM `{$table_prefix}site_content` sc
+            LEFT JOIN `{$table_prefix}document_groups` dg ON dg.document = sc.id
+            LEFT JOIN `{$table_prefix}webgroup_access` wga ON wga.documentgroup = dg.document_group
+            WHERE wga.id>0";
     $rs = $modx->db->query($sql);
     if(!$rs)
     {
@@ -210,10 +210,10 @@ function clean_up($sqlParser) {
     // secure manager documents privatemgr
     $modx->db->query("UPDATE `{$table_prefix}site_content` SET privatemgr = 0 WHERE privatemgr = 1");
     $sql =  "SELECT DISTINCT sc.id 
-             FROM `{$table_prefix}site_content` sc
-             LEFT JOIN `{$table_prefix}document_groups` dg ON dg.document = sc.id
-             LEFT JOIN `{$table_prefix}membergroup_access` mga ON mga.documentgroup = dg.document_group
-             WHERE mga.id>0";
+            FROM `{$table_prefix}site_content` sc
+            LEFT JOIN `{$table_prefix}document_groups` dg ON dg.document = sc.id
+            LEFT JOIN `{$table_prefix}membergroup_access` mga ON mga.documentgroup = dg.document_group
+            WHERE mga.id>0";
     $rs = $modx->db->query($sql);
     if(!$rs)
     {

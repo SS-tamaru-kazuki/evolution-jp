@@ -141,12 +141,12 @@ class MODxMailer extends PHPMailer
 				$body = mb_convert_encoding($body, 'JIS', $modx->config['modx_charset']);
 				if(ini_get('safe_mode')) $mode = 'normal';
 				else {
-					                     $this->Subject = $this->EncodeHeader($this->Subject);
-					                     $mode = 'mb';
+					$this->Subject = $this->EncodeHeader($this->Subject);
+					$mode = 'mb';
 				}
 				break;
 			default:
-				                         $mode = 'normal';
+				$mode = 'normal';
 		}
 		
 		if($modx->debug)

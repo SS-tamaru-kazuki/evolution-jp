@@ -233,7 +233,7 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
         foreach($formats as $k => $discard)
             if(!isset($fields[$k])) $fields[$k] = ""; // store dummy value inside $fields
 
-         $disclaimer = (($tmp=efLoadTemplate($disclaimer))!==false )? $tmp:'';
+        $disclaimer = (($tmp=efLoadTemplate($disclaimer))!==false )? $tmp:'';
 
         //error message containers
         $vMsg = $rMsg = $rClass = array();
@@ -244,7 +244,6 @@ $tpl = eFormParseTemplate($tpl,$isDebug);
                 //remove empty values
                 $fields[$name] = array_filter($value, create_function('$v','return (!empty($v));'));
             } else {
-                if(get_magic_quotes_gpc())                     $value = stripslashes($value);
                 if (!$allowhtml || $formats[$name][2]!='html') $value = strip_tags($value);
                 else                                           $value = $modx->htmlspecialchars($value);
                 $fields[$name] = $value;

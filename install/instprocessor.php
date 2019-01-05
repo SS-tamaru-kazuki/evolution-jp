@@ -165,7 +165,7 @@ if ($_SESSION['installmode'] == 0 && $installdata==1)
 }
 
 // call back function
-if ($callBackFnc != '') $callBackFnc ($sqlParser);
+if ($callBackFnc != '') $callBackFnc($sqlParser);
 
 // Setup the MODX API -- needed for the cache processor
 // initiate a new document parser

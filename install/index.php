@@ -15,6 +15,7 @@ if (version_compare(phpversion(), "5.3") < 0) {
 header("Content-Type: text/html; charset=utf-8");
 
 define('MODX_API_MODE', true);
+define('MODX_INSTALL_MODE', true);
 $base_path      = str_replace('\\','/', dirname(__DIR__)).'/';
 include_once("{$base_path}manager/includes/document.parser.class.inc.php");
 $modx = new DocumentParser;

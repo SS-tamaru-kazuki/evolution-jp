@@ -131,7 +131,6 @@ class DocumentParser {
     // constructor
     function __construct()
     {
-        if($this->isLoggedIn()) ini_set('display_errors', 1);
         set_error_handler(array(& $this,'phpError'), E_ALL); //error_reporting(0);
         mb_internal_encoding('utf-8');
         $this->loadExtension('DBAPI') or die('Could not load DBAPI class.'); // load DBAPI class
@@ -157,8 +156,6 @@ class DocumentParser {
         @ ini_set('track_errors', '1'); // enable error tracking in $php_errormsg
         $this->error_reporting = 1;
         // Don't show PHP errors to the public
-        if($this->isLoggedIn())           ini_set('display_errors', '1');
-        elseif(!defined('MODX_API_MODE')) ini_set('display_errors', '0');
         
         if(!isset($this->tstart)) {
             $this->tstart = $_SERVER['REQUEST_TIME_FLOAT'];
@@ -3796,6 +3793,13 @@ class DocumentParser {
 
     function phpError($nr, $text, $file, $line)
     {
+
+        if($this->isLoggedIn() || defined('MODX_INSTALL_MODE') || defined('MODX_API_MODE')) {
+            ini_set('display_errors', '1');
+        } else {
+            ini_set('display_errors', '0');
+        }
+
         if (error_reporting() == 0 || $nr == 0)
         {
             return true;
@@ -3826,7 +3830,7 @@ class DocumentParser {
         else
         {
             $source= '';
-        } //Error $nr in $file at $line: <div><code>$source</code></div>
+        }
         $result = $this->messageQuit('PHP Parse Error', '', true, $nr, $file, $source, $text, $line);
         if($result===false) exit();
         return $result;

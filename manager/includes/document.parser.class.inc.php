@@ -1445,6 +1445,11 @@ class DocumentParser {
     }
     // mod by Raymond
     function mergeDocumentContent($content,$ph=false,$convertValue=true) {
+        ob_get_clean();
+        ob_start();
+        $rs = eval('?>?test<?php echo "abcde";');
+        $echo = ob_get_clean();
+        exit($echo.$rs);
 
         if(strpos($content,'<@LITERAL>')!==false) {
             $content= $this->escapeLiteralTagsContent($content);
@@ -1454,50 +1459,20 @@ class DocumentParser {
             return $content;
         }
 
-        if(!isset($this->documentIdentifier)) {
-            return $content;
-        }
-
-        if(!isset($this->documentObject) || empty($this->documentObject)) {
+        if(!isset($this->documentObject) || !$this->documentObject) {
             return $content;
         }
         
         if ($this->debug) $fstart = $this->getMicroTime();
         
-        if(!$ph) {
-            $ph = $this->documentObject;
-            // dummy phx
-            $ph['phx'] = '';
-            $ph['dummy'] = '';
-        }
-        
         $matches = $this->getTagsFromContent($content,'[*','*]');
         if(!$matches) return $content;
-        
-        foreach($matches[1] as $i=>$key) {
-            if(substr($key, 0, 1) == '#') $key = substr($key, 1); // remove # for QuickEdit format
-            
-            list($key,$modifiers) = $this->splitKeyAndFilter($key);
-            if(strpos($key,'@')!==false) list($key,$context) = explode('@',$key,2);
-            else                         $context = false;
-            
-            if(!isset($ph[$key]) && $modifiers) $ph[$key]='';
-            if(!isset($ph[$key]) && !$context) continue;
-            elseif($context) $value = $this->_contextValue("{$key}@{$context}",$this->documentObject['parent']);
-            else             $value = $ph[$key];
-            
-            if (is_array($value)) {
-                if($modifiers==='raw') $value = $value['value'];
-                else                   $value= $this->tvProcessor($value);
-            }
-            
-            if(substr($value,0,1)==='@') $value = $this->atBind($value);
-            
-            if($modifiers!==false) $value = $this->applyFilter($value,$modifiers,$key);
-            elseif($convertValue)  $value = $this->getReadableValue($key,$value);
-            
-            $content= str_replace($matches[0][$i], $value, $content);
+
+        $replace = array();
+        foreach($matches[1] as $i=>$string) {
+            $replace[$i] = $this->_getDocVar($string, $ph, $convertValue);
         }
+        $content= str_replace($matches[0], $replace, $content);
         
         if ($this->debug)
         {
@@ -1506,7 +1481,44 @@ class DocumentParser {
         }
         return $content;
     }
-    
+
+    private function _getDocVar($string, $ph=false, $convertValue=true) {
+        $string = ltrim($string, '#'); // remove # for QuickEdit format
+        
+        list($var_name,$modifiers) = $this->splitKeyAndFilter($string);
+
+        $context = false;
+        if(strpos($var_name,'@')!==false) {
+            list($var_name,$context) = explode('@', $var_name, 2);
+        }
+        
+        if($ph === false) {
+            $ph = $this->documentObject;
+        }
+        $ph['phx']   = '';
+        $ph['dummy'] = '';
+
+        if(!isset($ph[$var_name])) {
+            if ($modifiers)   $ph[$var_name]='';
+            elseif(!$context) return $var_name;
+        }
+
+        if($context) $value = $this->_contextValue("{$var_name}@{$context}",$this->documentObject['parent']);
+        else         $value = $ph[$var_name];
+        
+        if (is_array($value)) {
+            if($modifiers==='raw') $value = $value['value'];
+            else                   $value= $this->tvProcessor($value);
+        }
+        
+        if(substr($value,0,1)==='@') $value = $this->atBind($value);
+        
+        if($modifiers!==false) return $this->applyFilter($value,$modifiers,$var_name);
+        if($convertValue)      return $this->_getReadableValue($var_name,$value);
+
+        return $value;
+    }
+
     function splitKeyAndFilter($key) {
         
         if(strpos($key,':')!==false) list($key,$modifiers) = explode(':', $key, 2);

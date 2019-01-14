@@ -41,7 +41,6 @@ class DocumentParser {
     var $dumpSnippetsCode = array();
     var $chunkCache;
     var $snippetCache;
-    var $contentTypes;
     var $dumpSQLCode      = array();
     var $ph;
     var $placeholders     = array();

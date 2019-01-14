@@ -268,7 +268,6 @@ class synccache {
 		$config = $this->_get_settings(); // get settings
 		if($modx->config['legacy_cache']) 
 			$this->_get_aliases();  // get aliases modx: support for alias path
-		$content .= $this->_get_content_types(); // get content types
 		$this->_get_chunks();   // WRITE Chunks to cache file
 		$this->_get_snippets(); // WRITE snippets to cache file
 		$this->_get_plugins();  // WRITE plugins to cache file
@@ -373,21 +372,6 @@ class synccache {
 			$modx->aliasListing[$docid] = array('id'=>$docid, 'alias'=>$row['alias'], 'path'=>$path, 'parent'=>$row['parent'], 'isfolder'=>$row['isfolder']);
 			$modx->documentMap[] = array($row['parent'] => $docid);
 		}
-	}
-	
-	function _get_content_types()
-	{
-		global $modx;
-		
-		$rs = $modx->db->select('id, contentType','[+prefix+]site_content',"contentType != 'text/html'");
-		$_[] = '$c = &$this->contentTypes;';
-		$row = array();
-		while ($row = $modx->db->getRow($rs))
-		{
-			extract($row);
-			$_[] = '$c' . "[{$id}] = '{$contentType}';";
-		}
-		return join("\n", $_) . "\n";
 	}
 	
 	function _get_chunks()

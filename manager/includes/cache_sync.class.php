@@ -278,7 +278,7 @@ class synccache {
 		$content = str_replace(array("\x0d\x0a", "\x0a", "\x0d"), "\x0a", $content);
 		
 		// invoke OnBeforeCacheUpdate event
-		if ($modx) $modx->invokeEvent('OnBeforeCacheUpdate');
+		$modx->invokeEvent('OnBeforeCacheUpdate');
 		
 		if( !$modx->saveToFile($this->cachePath .'siteCache.idx.php', $content))
 		{

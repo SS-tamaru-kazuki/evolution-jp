@@ -1529,7 +1529,7 @@ class DocumentParser {
         return array($key,$modifiers);
     }
     
-    function getReadableValue($key,$value) {
+    private function _getReadableValue($key,$value) {
         switch($key) {
             case 'createdon':
             case 'editedon':

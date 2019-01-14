@@ -3667,10 +3667,7 @@ class DocumentParser {
     // Added by Raymond 20-Jan-2005
     function tvProcessor($value,$format='',$paramstring='',$name='',$tvtype='',$docid='', $sep='')
     {
-        $modx = & $this;
-        
-        if(is_array($value))
-        {
+        if(is_array($value)) {
             if(isset($value['docid'])) $docid = $value['docid'];
             if(isset($value['sep']))   $sep   = $value['sep'];
             $format      = $value['display'];
@@ -3679,8 +3676,14 @@ class DocumentParser {
             $tvtype      = $value['type'];
             $value       = $value['value'];
         }
-        // process any TV commands in value
-        $docid= intval($docid) ? intval($docid) : $this->documentIdentifier;
+        elseif($this->db->isResult($value)) {
+            $value = $this->parseInput($value);
+        }
+        
+        if(!$docid || !preg_match('@^[1-9][0-9]*$@', $docid)) {
+            $docid = $this->documentIdentifier;
+        }
+
         switch($tvtype)
         {
             case 'dropdown':
@@ -3690,7 +3693,6 @@ class DocumentParser {
             case 'option':
                 $src = $tvtype;
                 $values = explode('||',$value);
-                $i = 0;
                 foreach($values as $i=>$v)
                 {
                     if(substr($v, 0, 5) === '<?php') $v = "@@EVAL\n".substr($v,6);
@@ -3706,24 +3708,13 @@ class DocumentParser {
                     $value = $this->ProcessTVCommand($value, $name, $docid, $src);
         }
         
-        if(empty($value))
-        {
-            if($format!=='custom_widget' && $format!=='richtext' && $format!=='datagrid')
-                return $value;
-            elseif($format==='datagrid' && $params['egmsg']==='')
-                return '';
-        }
-        
-        $param = array();
-        if($paramstring)
-        {
-            $cp = explode('&',$paramstring);
-            foreach($cp as $p => $v)
-            {
-                $v = trim($v); // trim
-                $ar = explode('=',$v);
-                if (is_array($ar) && count($ar)==2)
-                {
+        if($paramstring) {
+            $pairs = explode('&', $paramstring);
+            $params = array();
+            foreach($pairs as $pair) {
+                $pair = trim($pair); // trim
+                $ar = explode('=', $pair, 2);
+                if (is_array($ar) && count($ar)==2) {
                     if(strpos($ar[1],'%')!==false)
                         $params[$ar[0]] = $this->decodeParamValue($ar[1]);
                     else
@@ -3732,8 +3723,13 @@ class DocumentParser {
             }
         }
 
-        $id = "tv{$name}";
-        $o = '';
+        if($value=='') {
+            if(!in_array($format, array('custom_widget', 'richtext', 'datagrid')))
+                return $value;
+            elseif($format==='datagrid' && (!isset($params['egmsg']) || $params['egmsg']===''))
+                return '';
+        }
+        
         switch($format)
         {
             case 'image':
@@ -3748,20 +3744,17 @@ class DocumentParser {
             case 'datagrid':
             case 'htmlentities':
             case 'custom_widget':
-                $o = include(MODX_CORE_PATH . "docvars/outputfilter/{$format}.inc.php");
-                break;
-            default:
-                if($this->db->isResult($value)) $value = $this->parseInput($value);
-                if($tvtype=='checkbox'||$tvtype=='listbox-multiple')
-                {
-                    // add separator
-                    $value = explode('||',$value);
-                    $value = join($sep,$value);
-                }
-                $o = $value;
-                break;
+                $modx = & $this;
+                $id = "tv{$name}";
+                return include(MODX_CORE_PATH . "docvars/outputfilter/{$format}.inc.php");
         }
-        return $o;
+
+        if(in_array($tvtype, array('checkbox', 'listbox-multiple'))) {
+            $value = explode('||', $value);
+            $value = join($sep,$value);
+        }
+        
+        return $value;
     }
     
     function applyFilter($value='', $modifiers=false, $key='') {

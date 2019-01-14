@@ -1519,9 +1519,10 @@ class DocumentParser {
     }
 
     function splitKeyAndFilter($key) {
-        
-        if(strpos($key,':')!==false) list($key,$modifiers) = explode(':', $key, 2);
-        else                         $modifiers = false;
+        $modifiers = false;
+        if(strpos($key,':')!==false) {
+            list($key,$modifiers) = explode(':', $key, 2);
+        }
         
         $key = trim($key);
         if($modifiers!==false) $modifiers = trim($modifiers);
@@ -1549,8 +1550,9 @@ class DocumentParser {
     }
     
     function _contextValue($key,$parent=false) {
-        if(preg_match('/@\d+\/u/',$key))
-        $key = str_replace(array('@','/u'),array('@u(',')'),$key);
+        if(preg_match('/@\d+\/u/',$key)) {
+            $key = str_replace(array('@','/u'),array('@u(',')'),$key);
+        }
         list($key,$str) = explode('@',$key,2);
         
         if(strpos($str,'(')) list($context,$option) = explode('(', $str, 2);
@@ -3163,12 +3165,12 @@ class DocumentParser {
         return join("\n",$_);
     }
     
-    function toDateFormat($timestamp = 0, $mode = '')
+    public function toDateFormat($timestamp = 0, $mode = '')
     {
-        if($timestamp==0&&$mode==='') return '';
+        if($timestamp==0 && $mode==='') return '';
         
         $timestamp = trim($timestamp);
-        $timestamp = intval($timestamp) + $this->config['server_offset_time'];
+        $timestamp = intval($timestamp) + (int)$this->config['server_offset_time'];
         
         switch($this->config['datetime_format'])
         {

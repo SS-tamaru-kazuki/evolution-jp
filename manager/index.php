@@ -141,7 +141,7 @@ switch ($modx->manager->action) {
 }
 
 // include_once the style variables file
-$theme_dir = "media/style/{$manager_theme}/";
+$theme_dir = MODX_MANAGER_PATH . sprintf('media/style/%s/', $modx->config['manager_theme']);
 if(is_file("{$theme_dir}style.php")) include_once("{$theme_dir}style.php");
 
 // check if user is allowed to access manager interface
